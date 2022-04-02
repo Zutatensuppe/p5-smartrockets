@@ -9,6 +9,7 @@ const ROCKETS_NUM = 30
 const TARGETS_NUM = 100
 const ROCKET_RADIUS = 10;
 const TARGET_RADIUS = 30;
+const ROCKET_COLORS = ['black'] //  ['white', 'red', 'green', 'lime', 'blue', 'yellow', 'pink', 'purple', 'black']
 
 function setup() {
   // Initialisation
@@ -145,7 +146,7 @@ function drawHud() {
 
 class Rocket {
   constructor(x, y) {
-    this.color = random(['white', 'red', 'green', 'lime', 'blue', 'yellow', 'pink', 'purple', 'black'])
+    this.color = random(ROCKET_COLORS)
     this.pos = createVector(x, y)
     this.speed = createVector(0, -1)
     this.acceleration = createVector(0, 0)
