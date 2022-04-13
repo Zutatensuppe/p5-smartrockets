@@ -52,7 +52,7 @@ function draw() {
   drawTargets()
 
   let mouse = createVector(mouseX, mouseY)
-  agent_accel = p5.Vector.sub(mouse, p5.Vector.add(agent, agent_speed)).limit(5)
+  agent_accel = p5.Vector.sub(mouse, agent).limit(5)
   agent_speed.add(agent_accel)
   agent.add(agent_speed)
   circle(agent.x, agent.y, 10)
