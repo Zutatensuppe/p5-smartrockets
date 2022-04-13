@@ -11,7 +11,12 @@ const ROCKET_RADIUS = 10;
 const TARGET_RADIUS = 30;
 const ROCKET_COLORS = ['black'] //  ['white', 'red', 'green', 'lime', 'blue', 'yellow', 'pink', 'purple', 'black']
 
+let agent, agent_speed, agent_accel
 function setup() {
+
+agent = createVector(100, 100)
+agent_speed = createVector(0, 0)
+agent_accel = createVector(0, 0)
   // Initialisation
   createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 
@@ -38,13 +43,21 @@ function spawnRockets(n) {
 
 function draw() {
   // Runs once per frame, input + update + draw loop
-  background(125,125,125, 1)
+  background(255,255,255, 3)
 
   //input()
 
   updateRockets()
   drawRockets()
   drawTargets()
+
+  let mouse = createVector(mouseX, mouseY)
+  agent_accel = p5.Vector.sub(mouse, p5.Vector.add(agent, agent_speed)).limit(5)
+  agent_speed.add(agent_accel)
+  agent.add(agent_speed)
+  circle(agent.x, agent.y, 10)
+
+  agent_accel.mult(0)
 
   drawHud()
 }
@@ -55,20 +68,21 @@ function updateRockets() {
 
   const up = createVector(0, -1);
   const gravity = createVector(0, 0.1)
-
+  const left = createVector(-1, 0)
   for (let rocket of Rockets) {
     const thrust_power = random(0.4, 2.0)
     let thrust = createVector((random(0, 1)-.5)*thrust_power, -0.15)
     //thrust.rotate(rocket.speed.heading())
     let angle = rocket.speed.angleBetween(up);
     thrust.rotate(-angle) // setHeading(rocket.speed.heading())
-
+    left.rotate(-angle)
     rocket.pos = checkBounds(rocket.pos)
     if (!isInScreen(rocket)) {
       continue
     }
     rocket.acceleration.add(gravity)
     rocket.acceleration.add(thrust)
+    rocket.acceleration.add(left)
 
     // rocket.acceleration.add(p5.Vector.mult(thrust, rotation))
     rocket.speed.add(rocket.acceleration)
@@ -112,11 +126,11 @@ function checkBounds(pos) {
     return new_pos
 }
 function drawRockets() {
-  const radius = ROCKET_RADIUS;
+  const radius = 2;//ROCKET_RADIUS;
   for (let rocket of Rockets) {
-    fill('white')
+    fill('black')
     circle(rocket.pos.x, rocket.pos.y, radius)
-    drawArrow(rocket.pos, rocket.speed, rocket.color)
+    //drawArrow(rocket.pos, rocket.speed, rocket.color)
     // drawArrow(rocket.pos, rocket.rotation, 'yellow')
   }
 }
